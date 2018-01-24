@@ -1,5 +1,9 @@
-package com.mcolmenero.madridshops.domain.interactor
+package com.mcolmenero.madridshops.domain.interactor.getallshops
 
+import com.mcolmenero.madridshops.domain.interactor.ErrorClosure
+import com.mcolmenero.madridshops.domain.interactor.ErrorCompletion
+import com.mcolmenero.madridshops.domain.interactor.SuccessClosure
+import com.mcolmenero.madridshops.domain.interactor.SuccessCompletion
 import com.mcolmenero.madridshops.domain.model.Shop
 import com.mcolmenero.madridshops.domain.model.Shops
 
@@ -16,6 +20,21 @@ class GetAllShopsInteractorFakeImpl: GetAllShopsInteractor {
             success.successCompletion(shops)
         } else {
             error.errorCompletion("Error while accessing the Repository")
+        }
+    }
+
+    // Se recibe un Lamda (código) y no devuelve nada
+    fun execute(success: SuccessClosure, error: ErrorClosure) {
+        var allOK = true
+
+        // connect to the repository
+
+        if (allOK) {
+            val shops = createFakeListOfShops()
+
+            success(shops)
+        } else {
+            error("Error while accessing the Repository")
         }
     }
 
