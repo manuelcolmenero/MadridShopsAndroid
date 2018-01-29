@@ -1,8 +1,8 @@
-package madridshops.mcolmenero.com.repository.model
+package com.mcolmenero.madridshops.repository.model
 
 data class ShopEntity (
-        val id: Long,
         val databaseId: Long,
+        val id: Long,
         val name: String,
         val description: String,
         val latitude: Float,

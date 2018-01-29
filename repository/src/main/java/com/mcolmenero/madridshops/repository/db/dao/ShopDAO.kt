@@ -1,11 +1,11 @@
-package madridshops.mcolmenero.com.repository.db.dao
+package com.mcolmenero.madridshops.repository.db.dao
 
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import madridshops.mcolmenero.com.repository.db.DBConstants
-import madridshops.mcolmenero.com.repository.db.DBHelper
-import madridshops.mcolmenero.com.repository.model.ShopEntity
+import com.mcolmenero.madridshops.repository.db.DBConstants
+import com.mcolmenero.madridshops.repository.db.DBHelper
+import com.mcolmenero.madridshops.repository.model.ShopEntity
 
 /**
  * Se importa el DBHelper para poder conectar con la BD
@@ -21,9 +21,41 @@ class ShopDAO(
 
         cursor.moveToFirst()
 
+        return entityFromCursor(cursor)!!
+
+    }
+
+    override fun query(): List<ShopEntity> {
+        val queryResult = ArrayList<ShopEntity>()
+
+        val cursor = dbReadOnlyConnection.query(
+                DBConstants.TABLE_SHOP,
+                DBConstants.ALL_COLUMNS,
+                null,
+                null,
+                "",
+                "",
+                DBConstants.KEY_SHOP_DATABASE_ID
+        )
+
+        while (cursor.moveToNext()){
+            val result = entityFromCursor(cursor)!!
+
+            queryResult.add(result)
+        }
+
+        return queryResult
+    }
+
+    fun entityFromCursor (cursor: Cursor): ShopEntity? {
+
+        if (cursor.isAfterLast || cursor.isBeforeFirst) {
+            return  null
+        }
+
         return ShopEntity(
-                1,
-                cursor.getLong(cursor.getColumnIndex(DBConstants.KEY_SHOP_ID)),
+                cursor.getLong(cursor.getColumnIndex(DBConstants.KEY_SHOP_ID_JSON)),
+                cursor.getLong(cursor.getColumnIndex(DBConstants.KEY_SHOP_DATABASE_ID)),
                 cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_NAME)),
                 cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_DESCRIPTION)),
                 cursor.getFloat(cursor.getColumnIndex(DBConstants.KEY_SHOP_LATITUDE)),
@@ -33,11 +65,6 @@ class ShopDAO(
                 cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_OPENING_HOURS)),
                 cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_ADDRESS))
         )
-
-    }
-
-    override fun query(): List<ShopEntity> {
-        return ArrayList()
     }
 
     override fun queryCursor(id: Long): Cursor {
@@ -45,11 +72,11 @@ class ShopDAO(
         val cursor = dbReadOnlyConnection.query(
                 DBConstants.TABLE_SHOP,
                 DBConstants.ALL_COLUMNS,
-                DBConstants.KEY_SHOP_ID + " = ?",
+                DBConstants.KEY_SHOP_DATABASE_ID + " = ?",
                 arrayOf(id.toString()),
                 "",
                 "",
-                DBConstants.KEY_SHOP_ID
+                DBConstants.KEY_SHOP_DATABASE_ID
         )
 
         return cursor
@@ -61,7 +88,11 @@ class ShopDAO(
     override fun insert(element: ShopEntity): Long {
         var id: Long = 0
 
-        id = dbReadWriteConnection.insert(DBConstants.TABLE_SHOP, null, contentValues(element))
+        id = dbReadWriteConnection.insert(
+                DBConstants.TABLE_SHOP,
+                null,
+                contentValues(element))
+
 
         return id
     }
@@ -69,6 +100,7 @@ class ShopDAO(
      fun contentValues(shopEntity: ShopEntity): ContentValues {
          val content = ContentValues()
 
+        content.put(DBConstants.KEY_SHOP_ID_JSON, shopEntity.id)
         content.put(DBConstants.KEY_SHOP_NAME, shopEntity.name)
         content.put(DBConstants.KEY_SHOP_DESCRIPTION, shopEntity.description)
         content.put(DBConstants.KEY_SHOP_LATITUDE, shopEntity.latitude)
@@ -82,14 +114,22 @@ class ShopDAO(
     }
 
     override fun update(id: Long, element: ShopEntity): Long {
-        return 1
+        val numberOfRecordsUpdate = dbReadWriteConnection.update(
+                DBConstants.TABLE_SHOP,
+                contentValues(element),
+                DBConstants.KEY_SHOP_DATABASE_ID + " = ?",
+                arrayOf(id.toString())
+        )
+        return numberOfRecordsUpdate.toLong()
     }
 
     /**
      * deletes the element passed from DB
      */
     override fun delete(element: ShopEntity): Long {
-        return delete(element.id)
+        if (element.databaseId > 1) return 0
+
+        return delete(element.databaseId)
     }
 
     /**
@@ -99,14 +139,18 @@ class ShopDAO(
 
         return dbReadWriteConnection.delete(
                 DBConstants.TABLE_SHOP,
-                DBConstants.KEY_SHOP_ID + " = ?",
+                DBConstants.KEY_SHOP_DATABASE_ID + " = ?",
                 arrayOf(id.toString())
         ).toLong()
 
     }
 
     override fun deleteAll(): Boolean {
-        return true
+        return dbReadWriteConnection.delete(
+                DBConstants.TABLE_SHOP,
+                null,
+                null
+        ).toLong() > 0
     }
 
 }

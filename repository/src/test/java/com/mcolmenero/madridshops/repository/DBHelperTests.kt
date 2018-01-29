@@ -1,6 +1,6 @@
-package madridshops.mcolmenero.com.repository;
+package com.mcolmenero.madridshops.repository
 
-import madridshops.mcolmenero.com.repository.db.convert
+import com.mcolmenero.madridshops.repository.db.convert
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

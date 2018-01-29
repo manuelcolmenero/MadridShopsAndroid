@@ -1,4 +1,4 @@
-package madridshops.mcolmenero.com.repository.db.dao
+package com.mcolmenero.madridshops.repository.db.dao
 
 import android.database.Cursor
 

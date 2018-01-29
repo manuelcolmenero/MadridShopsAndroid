@@ -1,4 +1,4 @@
-package madridshops.mcolmenero.com.repository.db
+package com.mcolmenero.madridshops.repository.db
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
