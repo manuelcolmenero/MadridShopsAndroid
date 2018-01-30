@@ -2,7 +2,6 @@ package com.mcolmenero.madridshops.repository
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import android.util.Log
 import com.mcolmenero.madridshops.repository.db.build
 import com.mcolmenero.madridshops.repository.db.dao.ShopDAO
 import com.mcolmenero.madridshops.repository.model.ShopEntity
@@ -36,36 +35,14 @@ class ExampleInstrumentedTest {
                 ""
         )
 
-        val shop2 = ShopEntity(
-                2,
-                2,
-                "My shop 2",
-                "",
-                1.0f,
-                2.0f,
-                "",
-                "",
-                "",
-                ""
-        )
-
-
         val shopEntityDao = ShopDAO(dbHelper)
 
-        Log.d("MANU", "Conexión")
-
         val deleteAll = shopEntityDao.deleteAll()
-        Log.d("MANU", "Borrado de todo")
 
 
-        val id1 = shopEntityDao.insert(shop1)
-        val id2 = shopEntityDao.insert(shop2)
-        Log.d("MANU", "Doble insert")
+        val id = shopEntityDao.insert(shop1)
 
+        assertTrue(id > 0)
 
-        shopEntityDao.query().forEach {
-            Log.d("MANU", it.name)
-
-        }
     }
 }
