@@ -10,7 +10,7 @@ import com.mcolmenero.madridshops.repository.ErrorCompletion
 import com.mcolmenero.madridshops.repository.SuccessCompletion
 import java.lang.ref.WeakReference
 
-class GetJsonManagerVolleyImpl(context: Context): GetJsonManager {
+internal class GetJsonManagerVolleyImpl(context: Context): GetJsonManager {
 
     /**
      * Se crea un contexto con referencia debil para poder eliminar dicha relación

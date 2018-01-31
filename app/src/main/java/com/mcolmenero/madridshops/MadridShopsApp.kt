@@ -3,8 +3,9 @@ package com.mcolmenero.madridshops
 import android.support.multidex.MultiDexApplication
 import android.util.Log
 import com.mcolmenero.madridshops.domain.interactor.ErrorCompletion
-import com.mcolmenero.madridshops.domain.interactor.getallshops.GetAllShopsInteractorFakeImpl
 import com.mcolmenero.madridshops.domain.interactor.SuccessCompletion
+import com.mcolmenero.madridshops.domain.interactor.deleteallshops.DeleteAllShopsImpl
+import com.mcolmenero.madridshops.domain.interactor.getallshops.GetAllShopsInteractorFakeImpl
 import com.mcolmenero.madridshops.domain.model.Shops
 
 class MadridShopsApp : MultiDexApplication() {
@@ -49,6 +50,12 @@ class MadridShopsApp : MultiDexApplication() {
                     }
 
                 })
+
+        DeleteAllShopsImpl(this).execute(success = {
+            Log.d("Success", "Success")
+        }, error = {
+            Log.d("Error", "Error")
+        })
     }
 
     /*
