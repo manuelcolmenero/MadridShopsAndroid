@@ -1,5 +1,6 @@
 package com.mcolmenero.madridshops.repository
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.mcolmenero.madridshops.repository.model.ShopEntity
 import com.mcolmenero.madridshops.repository.model.ShopsResponseEntity
 import com.mcolmenero.madridshops.repository.network.json.JsonEntitiesParser
@@ -25,6 +26,30 @@ class JSONParsingTests {
         assertNotNull(shop)
         assertEquals("Cortefiel - Preciados", shop.name)
         assertEquals(40.4180563f, shop.latitude, 0.1f)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun given_invalid_string_containing_json_wrong_latitude_it_parse_correctly() {
+        val shopsJson = ReadJsonFile().loadJSONFromAsset("shopWrongLatitude.json")
+        assertTrue(false == shopsJson.isEmpty())
+
+        /**
+         * Parsing
+         */
+
+        val parser = JsonEntitiesParser()
+        var shop : ShopEntity
+
+        try {
+            shop = parser.parse<ShopEntity>(shopsJson)
+        } catch (e: InvalidFormatException){
+            shop = ShopEntity(1,1,"Parsing failed","", 10f, 10f, "","","","")
+        }
+
+        assertNotNull(shop)
+        assertEquals("Parsing failed", shop.name)
+        assertEquals(10f, shop.latitude, 0.1f)
     }
 
     @Test
