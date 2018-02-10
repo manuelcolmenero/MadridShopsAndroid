@@ -40,15 +40,14 @@ class MainActivity : AppCompatActivity() {
 
         // Configuración del MapFragment
         setupMap()
-
-        // Configuración del ListFragment
-        setupList()
     }
 
-    private fun setupList() {
+    private fun setupList(shops: Shops) {
         // Puntero al fragment del listado
         listFragment = supportFragmentManager.findFragmentById(R.id.activity_main_list_fragment) as ListFragment
-
+        if (shops != null) {
+            listFragment?.setShops(shops)
+        }
     }
 
     private fun setupMap() {
@@ -58,6 +57,8 @@ class MainActivity : AppCompatActivity() {
         getAllShopsInteractor.execute(object : SuccessCompletion<Shops> {
             override fun successCompletion(element: Shops) {
                 initializeMap(element)
+
+                setupList(element)
             }
 
         }, object : ErrorCompletion{
@@ -103,6 +104,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showUserPosition(context: Context, map: GoogleMap) {
+
         if (ActivityCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(context, ACCESS_COARSE_LOCATION)
@@ -113,7 +115,10 @@ class MainActivity : AppCompatActivity() {
                     10)
 
             return
+        } else {
+            map.isMyLocationEnabled = true
         }
+
 
     }
 
@@ -124,7 +129,7 @@ class MainActivity : AppCompatActivity() {
             try {
                 map?.isMyLocationEnabled = true
             } catch (e: SecurityException) {
-
+                Log.d("PERMISSION ERROR", "💩 Error in permissions")
             }
         }
     }
@@ -132,8 +137,12 @@ class MainActivity : AppCompatActivity() {
     fun addAllPins(shops: Shops) {
         for (index in 0 until shops.count()){
             val shop = shops.get(index)
-            // TODO: addPin(map, shop.latitude, shop.longitude, shop.name)
-            addPin(map!!, 40.416775, -3.703790, shop.name)
+
+            // Se verifica que no se llama a posicionar un pin si algun valor no está informado
+            if (shop.latitude != null && shop.longitude != null) {
+                addPin(map!!, shop.latitude!!, shop.longitude!!, shop.name)
+                //addPin(map!!, 40.416775, -3.703790, shop.name)
+            }
         }
     }
 

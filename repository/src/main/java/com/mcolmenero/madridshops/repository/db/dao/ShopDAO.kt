@@ -30,7 +30,7 @@ internal class ShopDAO(
 
         val cursor = dbReadOnlyConnection.query(
                 DBConstants.TABLE_SHOP,
-                DBConstants.ALL_COLUMNS,
+                DBConstants.ALL_COLUMNS_SHOP,
                 null,
                 null,
                 "",
@@ -57,13 +57,17 @@ internal class ShopDAO(
                 cursor.getLong(cursor.getColumnIndex(DBConstants.KEY_SHOP_ID_JSON)),
                 cursor.getLong(cursor.getColumnIndex(DBConstants.KEY_SHOP_DATABASE_ID)),
                 cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_NAME)),
-                cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_DESCRIPTION)),
+                cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_DESCRIPTION_EN)),
+                cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_DESCRIPTION_ES)),
                 cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_LATITUDE)),
                 cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_LONGITUDE)),
                 cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_IMAGE_URL)),
                 cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_LOGO_IMAGE_URL)),
-                cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_OPENING_HOURS)),
-                cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_ADDRESS))
+                cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_OPENING_HOURS_EN)),
+                cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_OPENING_HOURS_ES)),
+                cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_ADDRESS)),
+                cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_TELEPHONE)),
+                cursor.getString(cursor.getColumnIndex(DBConstants.KEY_SHOP_URL))
         )
     }
 
@@ -71,7 +75,7 @@ internal class ShopDAO(
 
         val cursor = dbReadOnlyConnection.query(
                 DBConstants.TABLE_SHOP,
-                DBConstants.ALL_COLUMNS,
+                DBConstants.ALL_COLUMNS_SHOP,
                 DBConstants.KEY_SHOP_DATABASE_ID + " = ?",
                 arrayOf(id.toString()),
                 "",
@@ -100,15 +104,20 @@ internal class ShopDAO(
      fun contentValues(shopEntity: ShopEntity): ContentValues {
          val content = ContentValues()
 
-        content.put(DBConstants.KEY_SHOP_ID_JSON, shopEntity.id)
-        content.put(DBConstants.KEY_SHOP_NAME, shopEntity.name)
-        content.put(DBConstants.KEY_SHOP_DESCRIPTION, shopEntity.description)
-        content.put(DBConstants.KEY_SHOP_LATITUDE, shopEntity.latitude)
-        content.put(DBConstants.KEY_SHOP_LONGITUDE, shopEntity.longitude)
-        content.put(DBConstants.KEY_SHOP_IMAGE_URL, shopEntity.img)
-        content.put(DBConstants.KEY_SHOP_LOGO_IMAGE_URL, shopEntity.logo)
-        content.put(DBConstants.KEY_SHOP_OPENING_HOURS, shopEntity.openingHours)
-        content.put(DBConstants.KEY_SHOP_ADDRESS, shopEntity.address)
+         // El id de la BBDD lo genera automaticamente si no se le indica
+         content.put(DBConstants.KEY_SHOP_ID_JSON, shopEntity.id)
+         content.put(DBConstants.KEY_SHOP_NAME, shopEntity.name)
+         content.put(DBConstants.KEY_SHOP_DESCRIPTION_EN, shopEntity.description_en)
+         content.put(DBConstants.KEY_SHOP_DESCRIPTION_ES, shopEntity.description_es)
+         content.put(DBConstants.KEY_SHOP_LATITUDE, shopEntity.latitude)
+         content.put(DBConstants.KEY_SHOP_LONGITUDE, shopEntity.longitude)
+         content.put(DBConstants.KEY_SHOP_IMAGE_URL, shopEntity.img)
+         content.put(DBConstants.KEY_SHOP_LOGO_IMAGE_URL, shopEntity.logo)
+         content.put(DBConstants.KEY_SHOP_ADDRESS, shopEntity.address)
+         content.put(DBConstants.KEY_SHOP_OPENING_HOURS_EN, shopEntity.openingHours_en)
+         content.put(DBConstants.KEY_SHOP_OPENING_HOURS_ES, shopEntity.openingHours_es)
+         content.put(DBConstants.KEY_SHOP_TELEPHONE, shopEntity.telephone)
+         content.put(DBConstants.KEY_SHOP_URL, shopEntity.url)
 
         return content
     }

@@ -41,8 +41,20 @@ class GetAllShopsInteractorFakeImpl: GetAllShopsInteractor {
     fun createFakeListOfShops(): Shops {
         val list = ArrayList<Shop>()
 
-        for (i in 0..100) {
-            val shop = Shop(i, address = "Shop " + i, name = "Address " + i)
+        for (index in 0..100) {
+            val shop = Shop(index.toLong(),
+                    name = "Shop " + index,
+                    description_en = "",
+                    description_es = "",
+                    latitude = 1.0,
+                    longitude = 1.0,
+                    imageURL = "image",
+                    logoURL = "logo",
+                    openingHours_en = "Hours",
+                    openingHours_es = "Hours",
+                    telephone = "",
+                    url = "",
+                    address = "Address " + index)
             list.add(shop)
         }
 

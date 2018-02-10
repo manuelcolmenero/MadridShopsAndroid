@@ -1,6 +1,7 @@
 package com.mcolmenero.madridshops.domain.interactor.getallshops
 
 import android.content.Context
+import android.util.Log
 import com.mcolmenero.madridshops.domain.interactor.ErrorCompletion
 import com.mcolmenero.madridshops.domain.interactor.SuccessCompletion
 import com.mcolmenero.madridshops.domain.model.Shop
@@ -30,12 +31,38 @@ class GetAllShopsInteractorImpl(context: Context) : GetAllShopsInteractor {
         val tempList = ArrayList<Shop>()
 
         list.forEach {
-            val shop = Shop(it.id.toInt(), it.name, it.address)
+            val shop = Shop(
+                    it.id,
+                    it.name,
+                    it.description_en,
+                    it.description_es,
+                    parseStringToDouble(it.latitude),
+                    parseStringToDouble(it.longitude),
+                    it.img,
+                    it.logo,
+                    it.openingHours_en,
+                    it.openingHours_es,
+                    it.address,
+                    it.telephone,
+                    it.url)
 
             tempList.add(shop)
         }
 
-        val shops = Shops(tempList)
-        return shops
+        return Shops(tempList)
+    }
+
+    private fun parseStringToDouble(value: String): Double? {
+        var coordinate: Double? = null
+
+        val parsedString: String = value.replace(",", "").replace(" ", "")
+
+        try {
+            coordinate = parsedString.toDouble()
+        } catch (e: Exception) {
+            Log.d("PARSE ERROR", "💩 Error parsing to float: " + value)
+        }
+
+        return coordinate
     }
 }

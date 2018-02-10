@@ -1,3 +1,7 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="margin_small">5dp</dimen>
+    <dimen name="margin_min">5dp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="shop_list_image_size">100dp</dimen>
 </resources>
