@@ -1,5 +1,7 @@
 package com.mcolmenero.madridshops.domain.model
 
+import java.io.Serializable
+
 /**
  * Shop: represents one Shops
  */
@@ -15,7 +17,7 @@ data class Shop(val id: Long,
                 val openingHours_es: String,
                 val address: String,
                 val telephone: String,
-                val url: String) {
+                val url: String): Serializable {
     init {
         Shops(ArrayList<Shop>())
     }

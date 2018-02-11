@@ -1,6 +1,7 @@
 package com.mcolmenero.madridshops.fragment
 
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
@@ -12,6 +13,7 @@ import android.view.ViewGroup
 
 import com.mcolmenero.madridshops.R
 import com.mcolmenero.madridshops.adapter.ShopRecyclerViewAdapter
+import com.mcolmenero.madridshops.domain.model.Shop
 import com.mcolmenero.madridshops.domain.model.Shops
 
 
@@ -20,6 +22,7 @@ class ListFragment : Fragment() {
     private lateinit var root: View
     private lateinit var shopRecyclerView: RecyclerView
     private var adapter: ShopRecyclerViewAdapter? = null
+    private var onShowShopDetail: OnShowShopDetail? = null
 
     private var shops: Shops? = null
 
@@ -33,6 +36,9 @@ class ListFragment : Fragment() {
             shopRecyclerView = root.findViewById(R.id.shops_recycler_view) as RecyclerView
             shopRecyclerView.layoutManager = GridLayoutManager(activity, resources.getInteger(R.integer.recycler_columns))
             shopRecyclerView.itemAnimator = DefaultItemAnimator()
+
+            adapter = ShopRecyclerViewAdapter(shops)
+            shopRecyclerView.adapter = adapter
         }
 
         return root
@@ -44,7 +50,7 @@ class ListFragment : Fragment() {
             val shop = shops?.get(position)
 
             // Send order to navigate to activity container
-            //onShowShopDetail?.showShopDetail(shop!!)
+            onShowShopDetail?.showShopDetail(shop!!)
         }
     }
 
@@ -56,5 +62,23 @@ class ListFragment : Fragment() {
 
         setListenerToAdapter(adapter!!)
 
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+
+        if (context is OnShowShopDetail) {
+            onShowShopDetail = context
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+
+        onShowShopDetail = null
+    }
+
+    interface OnShowShopDetail {
+        fun showShopDetail(shop: Shop)
     }
 }
