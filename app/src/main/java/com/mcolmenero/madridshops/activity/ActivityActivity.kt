@@ -17,28 +17,28 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.mcolmenero.madridshops.R
-import com.mcolmenero.madridshops.adapter.InfoShopWindowAdapter
+import com.mcolmenero.madridshops.adapter.InfoActivityWindowAdapter
 import com.mcolmenero.madridshops.domain.interactor.ErrorCompletion
 import com.mcolmenero.madridshops.domain.interactor.SuccessCompletion
-import com.mcolmenero.madridshops.domain.interactor.getallshops.GetAllShopsInteractor
-import com.mcolmenero.madridshops.domain.interactor.getallshops.GetAllShopsInteractorImpl
-import com.mcolmenero.madridshops.domain.model.Shop
-import com.mcolmenero.madridshops.domain.model.Shops
-import com.mcolmenero.madridshops.fragment.ShopsListFragment
+import com.mcolmenero.madridshops.domain.interactor.getallactivities.GetAllActivitiesInteractor
+import com.mcolmenero.madridshops.domain.interactor.getallactivities.GetAllActivitiesInteractorImpl
+import com.mcolmenero.madridshops.domain.model.Activities
+import com.mcolmenero.madridshops.domain.model.Activity
+import com.mcolmenero.madridshops.fragment.ActivitiesListFragment
 import com.mcolmenero.madridshops.router.Router
-import com.mcolmenero.madridshops.utis.getShopText
-import kotlinx.android.synthetic.main.activity_shop.*
-import kotlinx.android.synthetic.main.content_shop.*
+import com.mcolmenero.madridshops.utis.getActivityText
+import kotlinx.android.synthetic.main.activity_activity.*
+import kotlinx.android.synthetic.main.content_activity.*
 
 
-class ShopActivity : AppCompatActivity(), ShopsListFragment.OnShowShopDetail {
+class ActivityActivity : AppCompatActivity(), ActivitiesListFragment.OnShowActivityDetail {
 
-    private var shopsListFragment: ShopsListFragment? = null
+    private var activitiesListFragment: ActivitiesListFragment? = null
     private var map: GoogleMap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_shop)
+        setContentView(R.layout.activity_activity)
         setSupportActionBar(toolbar)
 
         // Configuración del MapFragment
@@ -49,19 +49,19 @@ class ShopActivity : AppCompatActivity(), ShopsListFragment.OnShowShopDetail {
 
         progress_bar.visibility = View.VISIBLE
 
-        val getAllShopsInteractor: GetAllShopsInteractor = GetAllShopsInteractorImpl(this)
+        val getAllActivitiesInteractor: GetAllActivitiesInteractor = GetAllActivitiesInteractorImpl(this)
 
-        getAllShopsInteractor.execute(object : SuccessCompletion<Shops> {
-            override fun successCompletion(shops: Shops) {
-                initializeMap(shops)
+        getAllActivitiesInteractor.execute(object : SuccessCompletion<Activities> {
+            override fun successCompletion(activities: Activities) {
+                initializeMap(activities)
                 progress_bar.visibility = View.GONE
 
-                setupList(shops)
+                setupList(activities)
             }
 
         }, object : ErrorCompletion {
             override fun errorCompletion(errorMessage: String) {
-                AlertDialog.Builder(this@ShopActivity)
+                AlertDialog.Builder(this@ActivityActivity)
                         .setTitle("Error")
                         .setMessage("Conexion Error. Unable connect to server.")
                         .setPositiveButton("Retry?", { dialog, which ->
@@ -78,16 +78,16 @@ class ShopActivity : AppCompatActivity(), ShopsListFragment.OnShowShopDetail {
         })
     }
 
-    private fun setupList(shops: Shops) {
+    private fun setupList(activities: Activities) {
         // Puntero al fragment del listado
-        shopsListFragment = supportFragmentManager.findFragmentById(R.id.activity_shop_list_fragment) as ShopsListFragment
-        if (shops != null) {
-            shopsListFragment?.setShops(shops)
+        activitiesListFragment = supportFragmentManager.findFragmentById(R.id.activity_activity_list_fragment) as ActivitiesListFragment
+        if (activities != null) {
+            activitiesListFragment?.setActivities(activities)
         }
     }
 
-    private fun initializeMap(shops: Shops) {
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.activity_shop_map_fragment) as SupportMapFragment
+    private fun initializeMap(activities: Activities) {
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.activity_activity_map_fragment) as SupportMapFragment
         mapFragment.getMapAsync({ mapa ->
             Log.d("SUCCESS", "HABEMUS MAPA")
 
@@ -98,11 +98,11 @@ class ShopActivity : AppCompatActivity(), ShopsListFragment.OnShowShopDetail {
 
             showUserPosition(baseContext, mapa)
 
-            mapa.setInfoWindowAdapter(InfoShopWindowAdapter(this))
+            mapa.setInfoWindowAdapter(InfoActivityWindowAdapter(this))
 
             map = mapa
 
-            addAllPins(shops)
+            addAllPins(activities)
         })
     }
 
@@ -151,33 +151,33 @@ class ShopActivity : AppCompatActivity(), ShopsListFragment.OnShowShopDetail {
         }
     }
 
-    fun addAllPins(shops: Shops) {
-        for (index in 0 until shops.count()){
-            val shop = shops.get(index)
+    fun addAllPins(activities: Activities) {
+        for (index in 0 until activities.count()){
+            val activity = activities.get(index)
 
             // Se verifica que no se llama a posicionar un pin si algun valor no está informado
-            if (shop.latitude != null && shop.longitude != null) {
-                addPin(map!!, shop)
-                //addPin(map!!, 40.416775, -3.703790, shop.name)
+            if (activity.latitude != null && activity.longitude != null) {
+                addPin(map!!, activity)
+                //addPin(map!!, 40.416775, -3.703790, activity.name)
             }
 
             map?.setOnInfoWindowClickListener {
-                if (it.tag is Shop) {
-                    Router().navigateFromShopActivityToShopDetailActivity(this, it.tag as Shop)
+                if (it.tag is Activity) {
+                    Router().navigateFromActivityActivityToActivityDetailActivity(this, it.tag as Activity)
                 }
             }
         }
     }
 
-    fun addPin(map: GoogleMap, shop: Shop) {
+    fun addPin(map: GoogleMap, activity: Activity) {
         map.addMarker(MarkerOptions()
-                .position(LatLng(shop.latitude!!, shop.longitude!!))
-                .title(shop.name)
-                .snippet(getShopText(shop, "openingHours")))
-                .tag = shop
+                .position(LatLng(activity.latitude!!, activity.longitude!!))
+                .title(activity.name)
+                .snippet(getActivityText(activity, "openingHours")))
+                .tag = activity
     }
 
-    override fun showShopDetail(shop: Shop) {
-        Router().navigateFromShopActivityToShopDetailActivity(this, shop)
+    override fun showActivityDetail(activity: Activity) {
+        Router().navigateFromActivityActivityToActivityDetailActivity(this, activity)
     }
 }

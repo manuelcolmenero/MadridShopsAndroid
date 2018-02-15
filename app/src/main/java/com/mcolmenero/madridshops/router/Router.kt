@@ -1,11 +1,11 @@
 package com.mcolmenero.madridshops.router
 
 import android.content.Intent
-import com.mcolmenero.madridshops.utis.INTENT_SHOP_DETAIL
-import com.mcolmenero.madridshops.activity.MainActivity
-import com.mcolmenero.madridshops.activity.ShopActivity
-import com.mcolmenero.madridshops.activity.ShopDetailActivity
+import com.mcolmenero.madridshops.activity.*
+import com.mcolmenero.madridshops.domain.model.Activity
 import com.mcolmenero.madridshops.domain.model.Shop
+import com.mcolmenero.madridshops.utis.INTENT_ACTIVITY_DETAIL
+import com.mcolmenero.madridshops.utis.INTENT_SHOP_DETAIL
 
 class Router {
 
@@ -22,12 +22,19 @@ class Router {
         currentActivity.startActivity(intent)
     }
 
-    /*
-    fun navigateFromMainActivityToActivitiesActivity(currentActivity: MainActivity) {
-        val intent = Intent(currentActivity, ActivitiesActivity::class.java)
+
+    fun navigateFromActivityActivityToActivityDetailActivity(currentActivity: ActivityActivity, activity: Activity) {
+        val intent = Intent(currentActivity, ActivityDetailActivity::class.java)
+        intent.putExtra(INTENT_ACTIVITY_DETAIL, activity)
 
         currentActivity.startActivity(intent)
-    }*/
+    }
+
+    fun navigateFromMainActivityToActivityActivity(currentActivity: MainActivity) {
+        val intent = Intent(currentActivity, ActivityActivity::class.java)
+
+        currentActivity.startActivity(intent)
+    }
 
 }
 

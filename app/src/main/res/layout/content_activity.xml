@@ -10,11 +10,11 @@
     android:paddingRight="@dimen/activity_horizontal_padding"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activity.ShopActivity"
-    tools:showIn="@layout/activity_shop">
+    tools:context=".activity.ActivityActivity"
+    tools:showIn="@layout/activity_activity">
 
     <fragment
-        android:id="@+id/activity_shop_map_fragment"
+        android:id="@+id/activity_activity_map_fragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,8 +22,8 @@
         android:background="@color/colorPrimary" />
 
     <fragment
-        android:id="@+id/activity_shop_list_fragment"
-        android:name="com.mcolmenero.madridshops.fragment.ShopsListFragment"
+        android:id="@+id/activity_activity_list_fragment"
+        android:name="com.mcolmenero.madridshops.fragment.ActivitiesListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"

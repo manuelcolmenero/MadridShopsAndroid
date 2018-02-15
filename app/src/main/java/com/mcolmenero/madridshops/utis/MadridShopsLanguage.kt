@@ -1,5 +1,6 @@
 package com.mcolmenero.madridshops.utis
 
+import com.mcolmenero.madridshops.domain.model.Activity
 import com.mcolmenero.madridshops.domain.model.Shop
 import java.util.*
 
@@ -55,6 +56,25 @@ fun getShopText(shop: Shop, option: String): String {
         when (getLanguage()) {
             "es" -> result = shop.openingHours_es
             else -> result = shop.openingHours_en
+        }
+    }
+
+
+    return result
+}
+
+fun getActivityText(activity: Activity, option: String): String {
+    var result = ""
+
+    if (option == "description") {
+        when (getLanguage()) {
+            "es" -> result = activity.description_es
+            else -> result = activity.description_en
+        }
+    } else if (option == "openingHours") {
+        when (getLanguage()) {
+            "es" -> result = activity.openingHours_es
+            else -> result = activity.openingHours_en
         }
     }
 

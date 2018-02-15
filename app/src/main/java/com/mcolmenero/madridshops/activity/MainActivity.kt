@@ -57,6 +57,6 @@ class MainActivity : AppCompatActivity() {
         activities_button.text = getButtonText("Activity")
 
         shop_button.setOnClickListener { Router().navigateFromMainActivityToShopActivity(this) }
-        //activities_button.setOnClickListener { Router().navigateFromMainActivityToActivitiesActivity(this) }
+        activities_button.setOnClickListener { Router().navigateFromMainActivityToActivityActivity(this) }
     }
 }

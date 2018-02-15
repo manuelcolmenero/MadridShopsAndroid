@@ -17,7 +17,7 @@ import com.mcolmenero.madridshops.domain.model.Shop
 import com.mcolmenero.madridshops.domain.model.Shops
 
 
-class ListFragment : Fragment() {
+class ShopsListFragment : Fragment() {
 
     private lateinit var root: View
     private lateinit var shopRecyclerView: RecyclerView
@@ -33,7 +33,7 @@ class ListFragment : Fragment() {
         inflater?.let {
             root = it.inflate(R.layout.fragment_list, container, false)
 
-            shopRecyclerView = root.findViewById(R.id.shops_recycler_view) as RecyclerView
+            shopRecyclerView = root.findViewById(R.id.recycler_view) as RecyclerView
             shopRecyclerView.layoutManager = GridLayoutManager(activity, resources.getInteger(R.integer.recycler_columns))
             shopRecyclerView.itemAnimator = DefaultItemAnimator()
 
