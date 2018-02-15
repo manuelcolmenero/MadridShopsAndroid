@@ -3,7 +3,9 @@ package com.mcolmenero.madridshops.repository.cache
 import android.content.Context
 import com.mcolmenero.madridshops.repository.db.DBHelper
 import com.mcolmenero.madridshops.repository.db.build
+import com.mcolmenero.madridshops.repository.db.dao.ActivityDAO
 import com.mcolmenero.madridshops.repository.db.dao.ShopDAO
+import com.mcolmenero.madridshops.repository.model.ActivityEntity
 import com.mcolmenero.madridshops.repository.model.ShopEntity
 import com.mcolmenero.madridshops.repository.thread.DispatchOnMainThread
 import java.lang.ref.WeakReference
@@ -12,6 +14,17 @@ internal class CacheImpl(context: Context) : Cache {
 
     val context = WeakReference<Context>(context)
 
+    private fun cacheDBHelper(): DBHelper {
+        return build(
+                context.get()!!,
+                "MadridShops.sqlite",
+                1
+        )
+    }
+
+    /**
+     * SHOPS
+     */
     override fun getAllShops(success: (shops: List<ShopEntity>) -> Unit, error: (errorMessage: String) -> Unit) {
         // Se crea un hilo de segundo plano
         Thread(Runnable {
@@ -58,11 +71,55 @@ internal class CacheImpl(context: Context) : Cache {
         }).run()
     }
 
-    private fun cacheDBHelper(): DBHelper {
-        return build(
-                context.get()!!,
-                "MadridShops.sqlite",
-                1
-        )
+    /**
+     * ACTIVITIES
+     */
+
+    override fun getAllActivities(success: (activities: List<ActivityEntity>) -> Unit, error: (errorMessage: String) -> Unit) {
+        // Se crea un hilo de segundo plano
+        Thread(Runnable {
+            val activities = ActivityDAO(cacheDBHelper()).query()
+            DispatchOnMainThread(Runnable {
+                if (activities.count() > 0) {
+                    success(activities)
+                } else {
+                    error("No activities")
+                }
+            })
+        }).run()
     }
+
+    override fun saveAllActivities(activities: List<ActivityEntity>, success: () -> Unit, error: (errorMessage: String) -> Unit) {
+        // Se crea un hilo de segundo plano
+        Thread(Runnable {
+            try {
+                activities.forEach {
+                    ActivityDAO(cacheDBHelper()).insert(it)
+                }
+
+                DispatchOnMainThread(Runnable { success() })
+            } catch (e: Exception) {
+                DispatchOnMainThread(Runnable {
+                    error("Error inserting activities")
+                })
+            }
+        }).run()
+
+    }
+
+    override fun deleteAllActivities(success: () -> Unit, error: (errorMessage: String) -> Unit) {
+
+        // Se crea un hilo de segundo plano
+        Thread(Runnable {
+            val successDeleting = ActivityDAO(cacheDBHelper()).deleteAll()
+            DispatchOnMainThread(Runnable {
+                if (successDeleting) {
+                    success()
+                } else {
+                    error("Error deleting")
+                }
+            })
+        }).run()
+    }
+
 }
