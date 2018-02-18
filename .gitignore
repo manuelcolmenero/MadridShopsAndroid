@@ -175,3 +175,4 @@ gradle-app.setting
 
 
 # End of https://www.gitignore.io/api/java,gradle,kotlin,androidstudio
+/app/src/main/res/values/google_maps_api_key.xml

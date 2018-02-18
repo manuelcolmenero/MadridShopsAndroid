@@ -1,5 +1,6 @@
 package com.mcolmenero.madridshops.repository.cache
 
+import com.mcolmenero.madridshops.repository.model.ActivityEntity
 import com.mcolmenero.madridshops.repository.model.ShopEntity
 
 internal interface Cache {
@@ -7,4 +8,10 @@ internal interface Cache {
 
     fun getAllShops (success: (shops: List<ShopEntity>) -> Unit, error: (errorMessage: String) -> Unit)
     fun saveAllShops (shops: List<ShopEntity>, success: () -> Unit, error: (errorMessage: String) -> Unit)
+
+
+    fun deleteAllActivities (success: () -> Unit, error: (errorMessage: String) -> Unit)
+
+    fun getAllActivities (success: (activities: List<ActivityEntity>) -> Unit, error: (errorMessage: String) -> Unit)
+    fun saveAllActivities (activities: List<ActivityEntity>, success: () -> Unit, error: (errorMessage: String) -> Unit)
 }

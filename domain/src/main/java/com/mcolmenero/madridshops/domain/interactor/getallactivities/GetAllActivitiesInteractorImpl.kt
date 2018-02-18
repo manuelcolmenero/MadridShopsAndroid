@@ -1,37 +1,37 @@
-package com.mcolmenero.madridshops.domain.interactor.getallshops
+package com.mcolmenero.madridshops.domain.interactor.getallactivities
 
 import android.content.Context
 import android.util.Log
 import com.mcolmenero.madridshops.domain.interactor.ErrorCompletion
 import com.mcolmenero.madridshops.domain.interactor.SuccessCompletion
-import com.mcolmenero.madridshops.domain.model.Shop
-import com.mcolmenero.madridshops.domain.model.Shops
+import com.mcolmenero.madridshops.domain.model.Activities
+import com.mcolmenero.madridshops.domain.model.Activity
 import com.mcolmenero.madridshops.repository.Repository
 import com.mcolmenero.madridshops.repository.RepositoryImpl
-import com.mcolmenero.madridshops.repository.model.ShopEntity
+import com.mcolmenero.madridshops.repository.model.ActivityEntity
 import java.lang.ref.WeakReference
 
-class GetAllShopsInteractorImpl(context: Context) : GetAllShopsInteractor {
+class GetAllActivitiesInteractorImpl(context: Context) : GetAllActivitiesInteractor {
 
     private val weakContext = WeakReference<Context>(context)
     private val repository: Repository = RepositoryImpl(weakContext.get()!!)
 
-    override fun execute(success: SuccessCompletion<Shops>, error: ErrorCompletion) {
-        repository.getAllShops(success = {
-            val shops : Shops = entityMapper(it)
+    override fun execute(success: SuccessCompletion<Activities>, error: ErrorCompletion) {
+        repository.getAllActivities(success = {
+            val activities : Activities = entityMapper(it)
 
-            success.successCompletion(shops)
+            success.successCompletion(activities)
 
         }, error = {
             error(it)
         })
     }
 
-    private fun entityMapper(list: List<ShopEntity>): Shops {
-        val tempList = ArrayList<Shop>()
+    private fun entityMapper(list: List<ActivityEntity>): Activities {
+        val tempList = ArrayList<Activity>()
 
         list.forEach {
-            val shop = Shop(
+            val activity = Activity(
                     it.id,
                     it.name,
                     it.description_en,
@@ -46,10 +46,10 @@ class GetAllShopsInteractorImpl(context: Context) : GetAllShopsInteractor {
                     it.telephone,
                     it.url)
 
-            tempList.add(shop)
+            tempList.add(activity)
         }
 
-        return Shops(tempList)
+        return Activities(tempList)
     }
 
     private fun parseStringToDouble(value: String): Double? {

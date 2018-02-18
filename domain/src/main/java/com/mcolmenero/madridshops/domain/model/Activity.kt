@@ -3,9 +3,9 @@ package com.mcolmenero.madridshops.domain.model
 import java.io.Serializable
 
 /**
- * Shop: represents one Shops
+ * Activity: represents one Activities
  */
-data class Shop(val id: Long,
+data class Activity(val id: Long,
                 val name: String,
                 val description_en: String,
                 val description_es: String,
@@ -19,36 +19,36 @@ data class Shop(val id: Long,
                 val telephone: String,
                 val url: String): Serializable {
     init {
-        Shops(ArrayList<Shop>())
+        Activities(ArrayList<Activity>())
     }
 }
 
 /**
  * Métodos de shops
  */
-data class Shops(val shops: MutableList<Shop>) : Aggregate<Shop> {
+data class Activities(val activities: MutableList<Activity>) : Aggregate<Activity> {
     override fun count(): Int {
-        return shops.size
+        return activities.size
     }
 
-    override fun all(): List<Shop> {
-        return shops
+    override fun all(): List<Activity> {
+        return activities
     }
 
-    override fun get(position: Int): Shop {
-        return shops.get(position)
+    override fun get(position: Int): Activity {
+        return activities.get(position)
     }
 
-    override fun add(element: Shop) {
-        shops.add(element)
+    override fun add(element: Activity) {
+        activities.add(element)
     }
 
     override fun delete(position: Int) {
-        shops.removeAt(position)
+        activities.removeAt(position)
     }
 
-    override fun delete(element: Shop) {
-        shops.remove(element)
+    override fun delete(element: Activity) {
+        activities.remove(element)
     }
 
 
